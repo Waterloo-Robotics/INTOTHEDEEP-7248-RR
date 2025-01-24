@@ -146,7 +146,7 @@ public void runOpMode(){
         /* X+ is to the right
         *  Y+ is away from you
         *  0 Heading is towards back of field */
-        Pose2d startpose = new Pose2d(14, -63.5, Math.toRadians(0));
+        Pose2d startpose = new Pose2d(14, -63.5, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startpose);
         ScoringClaw scoringClaw = new ScoringClaw(hardwareMap);
         ScoringArm scoringArm = new ScoringArm(hardwareMap);
