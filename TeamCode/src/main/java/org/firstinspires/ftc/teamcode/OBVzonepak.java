@@ -23,8 +23,10 @@ public void runOpMode(){
 
         TrajectoryActionBuilder park = drive.actionBuilder(startpose)
                 .strafeTo(new Vector2d(24,-60))
-                .waitSeconds(2)
-                .strafeTo(new Vector2d(-24,-60));
+                .waitSeconds(1)
+                .strafeTo(new Vector2d(-24,-60))
+                .waitSeconds(1)
+                .strafeTo(new Vector2d(0, -63.5));
 
         waitForStart();
 
