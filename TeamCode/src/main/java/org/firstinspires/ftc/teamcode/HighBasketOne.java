@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -22,8 +20,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="OBVzonepak")
-public class OBVzonepak extends LinearOpMode {
+@Autonomous(name="High Basket One")
+public class HighBasketOne extends LinearOpMode {
 
     public class ScoringClaw{
         private Servo claw;
@@ -106,27 +104,29 @@ public class OBVzonepak extends LinearOpMode {
 
             rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            controller=new PController(.002);
+            controller=new PController(.003);
             controller.setTolerance(35);
 
         }
 
-//        public class Home implements Action {
-//            @Override
-//            public boolean run(@NonNull TelemetryPacket packet) {
-//                leftSlide.setPosition(Constants.SCORING_ARM_HOME);
-//                rightSlide.setPosition(1 - Constants.SCORING_ARM_HOME);
-//                return false;
-//            }
-//        }
-//        public Action home() {
-//            return new Home();
-//        }
+        public class Home implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                controller.setSetPoint(Constants.SLIDE_HOME);
+                double power = controller.calculate(leftSlide.getCurrentPosition());
+                leftSlide.setPower(power);
+                rightSlide.setPower(power);
+
+                return !controller.atSetPoint();
+            }
+        }
+        public Action home() {
+            return new Home();
+        }
 
         public class Basket implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-
                 controller.setSetPoint(Constants.SLIDE_BASKET);
                 double power = controller.calculate(leftSlide.getCurrentPosition());
                 leftSlide.setPower(power);
@@ -164,6 +164,7 @@ public void runOpMode(){
         Actions.runBlocking(new ParallelAction(
                 scoringClaw.close(),
                 scoringArm.home()
+
         ));
 
         waitForStart();
@@ -181,6 +182,7 @@ public void runOpMode(){
                 new SleepAction(1),
                 scoringClaw.close(),
                 scoringArm.home(),
+                scoringslides.home(),
                 safe.build()
         ));
 
