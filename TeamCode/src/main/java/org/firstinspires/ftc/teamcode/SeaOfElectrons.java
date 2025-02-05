@@ -97,6 +97,7 @@ public class SeaOfElectrons extends OpMode{
     public DcMotorEx leftSlide  = null;
 
     IMU imu = null;
+    GoBildaPinpointDriver odo = null;
 
     public Servo intake_claw = null;
     public Servo intake_claw_orientation = null;
@@ -133,6 +134,9 @@ public class SeaOfElectrons extends OpMode{
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
+
+        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+        odo.recalibrateIMU();
 //
         rightSlide = (DcMotorEx) hardwareMap.get(DcMotor.class, "R_slide");
         rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -350,11 +354,16 @@ public class SeaOfElectrons extends OpMode{
         forward = gamepad1.left_stick_y * 0.6;
         strafe = -gamepad1.left_stick_x * 0.6;
         rotation = -gamepad1.right_stick_x * 0.6;
+
+        odo.update();
+
         if (gamepad1.options) {
             imu.resetYaw();
+            odo.resetPosAndIMU();
         }
 
-        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double botHeading = odo.getHeading();
 
         // Rotate the movement direction counter to the bot's rotation
         double rotX = strafe * Math.cos(-botHeading) - forward * Math.sin(-botHeading);
@@ -387,6 +396,7 @@ public class SeaOfElectrons extends OpMode{
         telemetry.addData("right slide power", rightSlide.getPower());
         telemetry.addData("left slide current", leftSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("right slide current", rightSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Heading", odo.getHeading());
         telemetry.update();
 
     }

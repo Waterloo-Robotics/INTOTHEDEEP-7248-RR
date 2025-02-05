@@ -28,15 +28,15 @@ public class Constants {
 
     public static final double INTAKE_ROTATION_SUB = 0.2;
 
-    public static final double INTAKE_CLAW_ROTATION_INTAKE = 0.85;
+    public static final double INTAKE_CLAW_ROTATION_INTAKE = 0.30;
 
     public static final double INTAKE_ROTATION_INTAKE = 0.21;
 
     public static final double SLIDER_INTAKE = 0.73;
 
-    public static final double SLIDER_TRANSFER = 0.85;
+    public static final double SLIDER_TRANSFER = 0.94;
 
-    public static final double INTAKE_CLAW_ROTATION_TRANSFER = 0.13;
+    public static final double INTAKE_CLAW_ROTATION_TRANSFER = 0.70;
 
     public static final int SLIDE_HOME = 0;
 
