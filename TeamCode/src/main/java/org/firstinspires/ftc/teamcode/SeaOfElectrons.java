@@ -604,7 +604,8 @@ public class SeaOfElectrons extends OpMode{
     }
 
     public void intake_claw_rotation_intake() {
-        intake_claw_rotation.setPosition(Constants.INTAKE_CLAW_ROTATION_INTAKE);
+        intake_claw_rotation.setPosition(Constants.INTAKE_CLAW_ROTATION_INTAKE
+        );
     }
 
     public void intake_claw_arm_rotation (){

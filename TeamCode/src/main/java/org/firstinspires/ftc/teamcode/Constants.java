@@ -36,7 +36,7 @@ public class Constants {
 
     public static final double SLIDER_TRANSFER = 0.94;
 
-    public static final double INTAKE_CLAW_ROTATION_TRANSFER = 0.70;
+    public static final double INTAKE_CLAW_ROTATION_TRANSFER = 0.72;
 
     public static final int SLIDE_HOME = 0;
 
