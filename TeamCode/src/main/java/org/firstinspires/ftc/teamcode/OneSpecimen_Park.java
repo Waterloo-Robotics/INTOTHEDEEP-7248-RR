@@ -8,11 +8,12 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.arcrobotics.ftclib.controller.PController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -20,8 +21,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="One Specimen")
-public class OneSpecimen extends LinearOpMode {
+@Autonomous(name="One Specimen Park")
+@Disabled
+public class OneSpecimen_Park extends LinearOpMode {
 
     public class ScoringClaw{
         private Servo claw;
@@ -352,7 +354,7 @@ public class OneSpecimen extends LinearOpMode {
         }
 
         public Action Intake() {
-            return new IntakeClawRotation.intake();
+            return new intake();
         }
 
         public class Home implements Action {
@@ -363,7 +365,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action home() {
-            return new IntakeClawRotation.Home();
+            return new Home();
         }
 
 
@@ -376,7 +378,7 @@ public class OneSpecimen extends LinearOpMode {
         }
 
         public Action Transfer() {
-            return new IntakeClawRotation.TRANSFER();
+            return new TRANSFER();
         }
     }
 
@@ -385,7 +387,7 @@ public class OneSpecimen extends LinearOpMode {
         /* X+ is to the right
          *  Y+ is away from you
          *  0 Heading is towards back of field */
-        Pose2d startpose = new Pose2d(-33, -63.5, Math.toRadians(-90));
+        Pose2d startpose = new Pose2d(14, -63.5, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startpose);
         ScoringArm scoringArm = new ScoringArm(hardwareMap);
         ScoringClaw scoringClaw = new ScoringClaw(hardwareMap);
@@ -397,15 +399,15 @@ public class OneSpecimen extends LinearOpMode {
 
 
 
-//        TrajectoryActionBuilder drive_to_bar = drive.actionBuilder(startpose)
-//                .strafeTo(new Vector2d(-12, -37.3))
-//                .waitSeconds(0.2);
-//
-//        TrajectoryActionBuilder park = drive_to_bar.endTrajectory().fresh()
-////                .strafeTo(new Vector2d(55, -63));
-//                .strafeTo(new Vector2d(-12,-40));
+        TrajectoryActionBuilder drive_to_bar = drive.actionBuilder(startpose)
+                .strafeTo(new Vector2d(-12, -37.3))
+                .waitSeconds(0.2);
 
-        TrajectoryActionBuilder first_block = drive.actionBuilder(startpose)
+        TrajectoryActionBuilder park = drive_to_bar.endTrajectory().fresh()
+//                .strafeTo(new Vector2d(55, -63));
+                .strafeTo(new Vector2d(-12,-40));
+
+        TrajectoryActionBuilder first_block = park.endTrajectory().fresh()
                 .strafeTo(new Vector2d(-50, -46))
                 .turnTo(Math.toRadians(90))
                 .waitSeconds(0.2);
@@ -448,115 +450,115 @@ public class OneSpecimen extends LinearOpMode {
         waitForStart();
         if (isStopRequested())return;
 
-////        Actions.runBlocking(new ParallelAction(
-////                drive_to_bar.build(),
-////                scoringslides.lowBar(),
-////                scoringArm.bar_score()
-////        ));
-////
-////        Actions.runBlocking(new SequentialAction(
-////                scoringslides.bar(),
-////                new SleepAction(0.25),
-////                scoringClaw.open(),
-////                scoringslides.home(),
-//                park.build()
+        Actions.runBlocking(new ParallelAction(
+                drive_to_bar.build(),
+                scoringslides.lowBar(),
+                scoringArm.bar_score()
+        ));
+
+        Actions.runBlocking(new SequentialAction(
+                scoringslides.bar(),
+                new SleepAction(0.25),
+                scoringClaw.open(),
+                scoringslides.home(),
+                park.build()
+        ));
+
+//        Actions.runBlocking(new SequentialAction(
+//                first_block.build(),
+//                intakeArm.grab(),
+//                intakeClawRotation.Intake(),
+//                intakeSlider.Intake(),
+//                intakeClaw.open(),
+//                scoringClaw.close(),
+//                scoringArm.Transfer(),
+//                new SleepAction(0.5),
+//                scoringClaw.open(),
+//                new SleepAction(0.25),
+//                intakeClaw.close(),
+//                new SleepAction(0.25)
 //        ));
 
-        Actions.runBlocking(new SequentialAction(
-                first_block.build(),
-                intakeArm.grab(),
-                intakeClawRotation.Intake(),
-                intakeSlider.Intake(),
-                intakeClaw.open(),
-                scoringClaw.close(),
-                scoringArm.Transfer(),
-                new SleepAction(0.5),
-                scoringClaw.open(),
-                new SleepAction(0.25),
-                intakeClaw.close(),
-                new SleepAction(0.25)
-        ));
+//        Actions.runBlocking(new SequentialAction(
+//                intakeClawRotation.Transfer(),
+//                intakeArm.transfer(),
+//                new SleepAction(1)
+//
+//        ));
 
-        Actions.runBlocking(new SequentialAction(
-                intakeClawRotation.Transfer(),
-                intakeArm.transfer(),
-                new SleepAction(1)
+//        Actions.runBlocking(new SequentialAction(
+//                intakeSlider.Transfer(),
+//                new SleepAction(0.25),
+//                scoringClaw.close(),
+//                new SleepAction(0.5),
+//                intakeClaw.open()
+//        ));
 
-        ));
+//        Actions.runBlocking(new ParallelAction(
+//                score1.build(),
+//                scoringArm.basket(),
+//                scoringslides.basket()
+//        ));
 
-        Actions.runBlocking(new SequentialAction(
-                intakeSlider.Transfer(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                new SleepAction(0.5),
-                intakeClaw.open()
-        ));
+//        Actions.runBlocking(new SequentialAction(
+//                scoringClaw.open(),
+//                new SleepAction(0.25),
+//                scoringClaw.close(),
+//                scoringArm.home(),
+//                new SleepAction(1.0),
+//                scoringslides.home()
+//        ));
 
-        Actions.runBlocking(new ParallelAction(
-                score1.build(),
-                scoringArm.basket(),
-                scoringslides.basket()
-        ));
+//        Actions.runBlocking(new SequentialAction(
+//                second_block.build(),
+//                intakeArm.grab(),
+//                intakeClawRotation.Intake(),
+//                intakeSlider.Intake(),
+//                intakeClaw.open(),
+//                scoringClaw.close(),
+//                scoringArm.Transfer(),
+//                new SleepAction(0.5),
+//                scoringClaw.open(),
+//                new SleepAction(0.25),
+//                intakeClaw.close(),
+//                new SleepAction(0.25)
+//        ));
 
-        Actions.runBlocking(new SequentialAction(
-                scoringClaw.open(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                scoringArm.home(),
-                new SleepAction(1.0),
-                scoringslides.home()
-        ));
+//        Actions.runBlocking(new SequentialAction(
+//                intakeClawRotation.Transfer(),
+//                intakeArm.transfer(),
+//                new SleepAction(1)
+//
+//        ));
 
-        Actions.runBlocking(new SequentialAction(
-                second_block.build(),
-                intakeArm.grab(),
-                intakeClawRotation.Intake(),
-                intakeSlider.Intake(),
-                intakeClaw.open(),
-                scoringClaw.close(),
-                scoringArm.Transfer(),
-                new SleepAction(0.5),
-                scoringClaw.open(),
-                new SleepAction(0.25),
-                intakeClaw.close(),
-                new SleepAction(0.25)
-        ));
+//        Actions.runBlocking(new SequentialAction(
+//                intakeSlider.Transfer(),
+//                new SleepAction(0.25),
+//                scoringClaw.close(),
+//                new SleepAction(0.5),
+//                intakeClaw.open()
+//        ));
 
-        Actions.runBlocking(new SequentialAction(
-                intakeClawRotation.Transfer(),
-                intakeArm.transfer(),
-                new SleepAction(1)
+//        Actions.runBlocking(new ParallelAction(
+//                score2.build(),
+//                scoringArm.basket(),
+//                scoringslides.basket()
+//        ));
 
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                intakeSlider.Transfer(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                new SleepAction(0.5),
-                intakeClaw.open()
-        ));
-
-        Actions.runBlocking(new ParallelAction(
-                score2.build(),
-                scoringArm.basket(),
-                scoringslides.basket()
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                scoringClaw.open(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                scoringArm.home(),
-                new SleepAction(1.0),
-                scoringClaw.close(),
-                scoringArm.home(),
-                intakeSlider.home(),
-                intakeClaw.close(),
-                intakeArm.home(),
-                intakeClawRotation.home(),
-                scoringslides.home()
-        ));
+//        Actions.runBlocking(new SequentialAction(
+//                scoringClaw.open(),
+//                new SleepAction(0.25),
+//                scoringClaw.close(),
+//                scoringArm.home(),
+//                new SleepAction(1.0),
+//                scoringClaw.close(),
+//                scoringArm.home(),
+//                intakeSlider.home(),
+//                intakeClaw.close(),
+//                intakeArm.home(),
+//                intakeClawRotation.home(),
+//                scoringslides.home()
+//        ));
 
 
     }

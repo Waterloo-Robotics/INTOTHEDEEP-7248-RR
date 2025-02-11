@@ -363,7 +363,7 @@ public class SeaOfElectrons extends OpMode{
         }
 
 //        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        double botHeading = odo.getHeading();
+        double botHeading = odo.getHeading();  //=0
 
         // Rotate the movement direction counter to the bot's rotation
         double rotX = strafe * Math.cos(-botHeading) - forward * Math.sin(-botHeading);
@@ -380,14 +380,14 @@ public class SeaOfElectrons extends OpMode{
         double frontRightPower = (rotY - rotX - rotation) / denominator;
         double backRightPower = (rotY + rotX - rotation) / denominator;
 
-        leftFrontDrive.setPower(frontLeftPower);
-        leftBackDrive.setPower(backLeftPower);
-        rightFrontDrive.setPower(frontRightPower);
-        rightBackDrive.setPower(backRightPower);
-//        leftFrontDrive.setPower(forward + strafe + rotation);
-//        leftBackDrive.setPower(forward - strafe + rotation);
-//        rightFrontDrive.setPower(forward - strafe - rotation);
-//        rightBackDrive.setPower(forward + strafe - rotation);
+//        leftFrontDrive.setPower(frontLeftPower);
+//        leftBackDrive.setPower(backLeftPower);
+//        rightFrontDrive.setPower(frontRightPower);
+//        rightBackDrive.setPower(backRightPower);
+        leftFrontDrive.setPower(forward + strafe + rotation);
+        leftBackDrive.setPower(forward - strafe + rotation);
+        rightFrontDrive.setPower(forward - strafe - rotation);
+        rightBackDrive.setPower(forward + strafe - rotation);
 
         telemetry.addData(">", "Robot Ready.  Press START.");
         telemetry.addData("left slide position", leftSlide.getCurrentPosition());
