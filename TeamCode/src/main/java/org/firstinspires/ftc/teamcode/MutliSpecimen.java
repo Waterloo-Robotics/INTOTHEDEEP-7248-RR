@@ -20,8 +20,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="One specimen")
-public class OneSpecimen extends LinearOpMode {
+@Autonomous(name="One Specimen but more")
+public class MutliSpecimen extends LinearOpMode {
 
     public class ScoringClaw{
         private Servo claw;
@@ -37,7 +37,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action open() {
-            return new ScoringClaw.Open();
+            return new Open();
         }
 
         public class Close implements Action {
@@ -48,7 +48,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action close() {
-            return new ScoringClaw.Close();
+            return new Close();
         }
     }
 
@@ -72,7 +72,7 @@ public class OneSpecimen extends LinearOpMode {
 
 
         public Action home() {
-            return new ScoringArm.Home();
+            return new Home();
         }
 
         public class Bar_score implements Action {
@@ -84,7 +84,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action bar_score() {
-            return new ScoringArm.Bar_score();
+            return new Bar_score();
         }
 
         public class Transfer implements Action {
@@ -96,7 +96,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action Transfer() {
-            return new ScoringArm.Transfer();
+            return new Transfer();
         }
 
         public class Basket implements Action {
@@ -108,7 +108,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action basket() {
-            return new ScoringArm.Basket();
+            return new Basket();
         }
     }
 
@@ -153,7 +153,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action home() {
-            return new ScoringSlides.Home();
+            return new Home();
         }
 
         public class Bar implements Action {
@@ -175,13 +175,13 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action bar() {
-            return new ScoringSlides.Bar();
+            return new Bar();
         }
 
         public class LowBar implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                controller.setSetPoint(Constants.SLIDE_BAR-300);
+                controller.setSetPoint(Constants.SLIDE_BAR-500);
                 double power = controller.calculate(leftSlide.getCurrentPosition());
                 boolean done = controller.atSetPoint();
 
@@ -197,7 +197,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action lowBar() {
-            return new ScoringSlides.LowBar();
+            return new LowBar();
         }
 
         public class Basket implements Action {
@@ -212,7 +212,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action basket() {
-            return new ScoringSlides.Basket();
+            return new Basket();
         }
     }
 
@@ -231,7 +231,7 @@ public class OneSpecimen extends LinearOpMode {
         }
 
         public Action Intake() {
-            return new IntakeSlider.intake();
+            return new intake();
         }
 
         public class Home implements Action {
@@ -242,7 +242,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action home() {
-            return new IntakeSlider.Home();
+            return new Home();
         }
 
 
@@ -255,7 +255,7 @@ public class OneSpecimen extends LinearOpMode {
         }
 
         public Action Transfer() {
-            return new IntakeSlider.TRANSFER();
+            return new TRANSFER();
         }
 
     }
@@ -274,7 +274,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action open() {
-            return new IntakeClaw.Open();
+            return new Open();
         }
 
         public class Close implements Action {
@@ -285,7 +285,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action close() {
-            return new IntakeClaw.Close();
+            return new Close();
         }
     }
 
@@ -307,7 +307,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action home() {
-            return new IntakeArm.Home();
+            return new Home();
         }
 
         public class Grab implements Action {
@@ -319,7 +319,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action grab() {
-            return new IntakeArm.Grab();
+            return new Grab();
         }
 
         public class Transfer implements Action {
@@ -333,7 +333,7 @@ public class OneSpecimen extends LinearOpMode {
         }
 
         public Action transfer() {
-            return new IntakeArm.Transfer();
+            return new Transfer();
         }
     }
 
@@ -370,7 +370,7 @@ public class OneSpecimen extends LinearOpMode {
         public class TRANSFER implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                intake_claw_rotation.setPosition(Constants.INTAKE_CLAW_ROTATION_TRANSFER );
+                intake_claw_rotation.setPosition(Constants.INTAKE_CLAW_ROTATION_TRANSFER - 0.05);
                 return false;
             }
         }
@@ -385,7 +385,7 @@ public class OneSpecimen extends LinearOpMode {
         /* X+ is to the right
          *  Y+ is away from you
          *  0 Heading is towards back of field */
-        Pose2d startpose = new Pose2d(-33, -63.5, Math.toRadians(-90));
+        Pose2d startpose = new Pose2d(16, -63.5, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startpose);
         ScoringArm scoringArm = new ScoringArm(hardwareMap);
         ScoringClaw scoringClaw = new ScoringClaw(hardwareMap);
@@ -398,53 +398,46 @@ public class OneSpecimen extends LinearOpMode {
 
 
         TrajectoryActionBuilder drive_to_bar = drive.actionBuilder(startpose)
-                .strafeTo(new Vector2d(-10, -38))
+                .strafeTo(new Vector2d(12, -38))
                 .waitSeconds(0.2);
 
-        TrajectoryActionBuilder park = drive_to_bar.endTrajectory().fresh()
-               // .strafeTo(new Vector2d(-55, -63))
-                .strafeTo(new Vector2d(-12,-40));
+        TrajectoryActionBuilder pick_up2 = drive_to_bar.endTrajectory().fresh()
+                .strafeToLinearHeading(new Vector2d(54, -65), Math.toRadians(90));
 
-        TrajectoryActionBuilder first_block = park.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-50, -46))
-                .turnTo(Math.toRadians(90))
-                .waitSeconds(0.2);
+        TrajectoryActionBuilder lineup = pick_up2.endTrajectory().fresh()
+                .strafeToLinearHeading(new Vector2d(6, -38), Math.toRadians(-90));
 
-
-        TrajectoryActionBuilder score1 = first_block.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-55, -55))
-                .waitSeconds(0.1)
-                .turnTo(Math.toRadians(45))
-                .waitSeconds(0.1);
-
-        TrajectoryActionBuilder second_block = score1.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-60, -46))
-                .turnTo(Math.toRadians(90))
-                .waitSeconds(0.2);
-
-        TrajectoryActionBuilder score2 = second_block.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-55, -55))
-                .waitSeconds(0.1)
-                .turnTo(Math.toRadians(45))
-                .waitSeconds(0.1);
-
-        TrajectoryActionBuilder park2 = score2.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-33, -63.5))
-                .waitSeconds(0.1)
-                .turnTo(Math.toRadians(-90))
-                .waitSeconds(0.1);
-
-        TrajectoryActionBuilder score3 = park2.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-60, -12));
+        TrajectoryActionBuilder score2 = lineup.endTrajectory().fresh()
+        .strafeTo(new Vector2d(6, -36));
 
 
-//        TrajectoryActionBuilder adjscore3 = score3.endTrajectory().fresh()
-//                .strafeTo(new Vector2d(-63.5, -63.5));
 
 
-        TrajectoryActionBuilder netscore3 = score3.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-63.5, -63.5));
+                TrajectoryActionBuilder park = score2.endTrajectory().fresh()
+                // .strafeTo(new Vector2d(-55, -63))
+                .strafeTo(new Vector2d(12,-40));
 
+        TrajectoryActionBuilder park2 = park.endTrajectory().fresh()
+                .strafeTo(new Vector2d(36,-40));
+
+        TrajectoryActionBuilder block1 = park2.endTrajectory().fresh()
+                .strafeTo(new Vector2d(41,-12));
+
+        TrajectoryActionBuilder human1 = block1.endTrajectory().fresh()
+                .strafeTo(new Vector2d(41,-55));
+//
+        TrajectoryActionBuilder block2 = human1.endTrajectory().fresh()
+         .strafeToLinearHeading(new Vector2d(53, -12), Math.toRadians(90));
+              //  .strafeTo(new Vector2d(53,-12));
+
+        TrajectoryActionBuilder human2 = block2.endTrajectory().fresh()
+                .strafeTo(new Vector2d(53,-55));
+
+        TrajectoryActionBuilder block3 = human2.endTrajectory().fresh()
+                .strafeTo(new Vector2d(65,-12));
+
+        TrajectoryActionBuilder human3 = block3.endTrajectory().fresh()
+                .strafeTo(new Vector2d(65,-55));
 
 
         Actions.runBlocking(new ParallelAction(
@@ -459,122 +452,67 @@ public class OneSpecimen extends LinearOpMode {
         waitForStart();
         if (isStopRequested())return;
         Actions.runBlocking(new ParallelAction(
-              drive_to_bar.build(),
-              scoringslides.lowBar(),
-            scoringArm.bar_score()));
+                drive_to_bar.build(),
+                scoringslides.lowBar(),
+                scoringArm.bar_score()));
 
         Actions.runBlocking(new SequentialAction(
-               scoringslides.bar(),
-              new SleepAction(0.25),
+                scoringslides.bar(),
+                new SleepAction(0.25),
                 scoringClaw.open(),
-                scoringslides.home(),
-                park.build()
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                first_block.build(),
-                intakeArm.grab(),
-                intakeClawRotation.Intake(),
-                intakeSlider.Intake(),
-                intakeClaw.open(),
-                scoringClaw.close(),
-                scoringArm.Transfer(),
-                new SleepAction(0.5),
-                scoringClaw.open(),
-                new SleepAction(0.25),
-                intakeClaw.close(),
-                new SleepAction(0.25)
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                intakeClawRotation.Transfer(),
-                intakeArm.transfer(),
-                new SleepAction(1)
-
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                intakeSlider.Transfer(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                new SleepAction(0.25),
-                intakeClaw.open()
-        ));
-
-        Actions.runBlocking(new ParallelAction(
-                score1.build(),
-                scoringArm.basket(),
-                scoringslides.basket()
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                scoringClaw.open(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                scoringArm.home(),
-                new SleepAction(0.75),
                 scoringslides.home()
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                second_block.build(),
-                intakeArm.grab(),
-                intakeClawRotation.Intake(),
-                intakeSlider.Intake(),
-                intakeClaw.open(),
-                scoringClaw.close(),
-                scoringArm.Transfer(),
-                new SleepAction(0.5),
-                scoringClaw.open(),
-                new SleepAction(0.25),
-                intakeClaw.close(),
-                new SleepAction(0.25)
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                intakeClawRotation.Transfer(),
-                intakeArm.transfer(),
-                new SleepAction(0.75)
-
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                intakeSlider.Transfer(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                new SleepAction(0.5),
-                intakeClaw.open()
+                //park.build()
         ));
 
         Actions.runBlocking(new ParallelAction(
+                pick_up2.build(),
+                scoringClaw.open(),
+        new SleepAction(0.25)
+
+        ));
+
+        Actions.runBlocking(new SequentialAction(
+                scoringClaw.close()
+        ));
+
+        Actions.runBlocking(new ParallelAction(
+                scoringslides.bar(),
+                scoringArm.bar_score(),
+                lineup.build(),
+            new SleepAction(1)
+        ));
+
+        Actions.runBlocking(new SequentialAction(
                 score2.build(),
-                scoringArm.basket(),
-                scoringslides.basket()
-        ));
-
-
-        Actions.runBlocking(new SequentialAction(
+                scoringslides.lowBar(),
+                new SleepAction(2),
                 scoringClaw.open(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                scoringArm.home(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                scoringArm.home(),
-                intakeSlider.home(),
-                intakeClaw.close(),
-                intakeArm.home(),
-                intakeClawRotation.home(),
                 scoringslides.home()
+
         ));
 
+
+
+
         Actions.runBlocking(new SequentialAction(
-                score3.build(),
-                new SleepAction(0.1),
-                //adjscore3.build(),
-                new SleepAction(0.1),
-                netscore3.build()
+                park2.build(),
+                new SleepAction(0.25),
+                block1.build(),
+                new SleepAction(0.25),
+                human1.build()
+                //                new SleepAction(0.25),
+//                block2.build(),
+//                new SleepAction(0.25),
+//                human2.build(),
+//                new SleepAction(0.25),
+//                block3.build(),
+//                new SleepAction(0.25),
+//                human3.build()
+//
+////
+////
         ));
+
 
 
     }

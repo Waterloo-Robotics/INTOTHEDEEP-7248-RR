@@ -20,8 +20,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="One specimen")
-public class OneSpecimen extends LinearOpMode {
+@Autonomous(name="Four yellow")
+public class FourYellow extends LinearOpMode {
 
     public class ScoringClaw{
         private Servo claw;
@@ -37,7 +37,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action open() {
-            return new ScoringClaw.Open();
+            return new Open();
         }
 
         public class Close implements Action {
@@ -48,7 +48,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action close() {
-            return new ScoringClaw.Close();
+            return new Close();
         }
     }
 
@@ -72,7 +72,7 @@ public class OneSpecimen extends LinearOpMode {
 
 
         public Action home() {
-            return new ScoringArm.Home();
+            return new Home();
         }
 
         public class Bar_score implements Action {
@@ -84,7 +84,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action bar_score() {
-            return new ScoringArm.Bar_score();
+            return new Bar_score();
         }
 
         public class Transfer implements Action {
@@ -96,7 +96,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action Transfer() {
-            return new ScoringArm.Transfer();
+            return new Transfer();
         }
 
         public class Basket implements Action {
@@ -108,7 +108,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action basket() {
-            return new ScoringArm.Basket();
+            return new Basket();
         }
     }
 
@@ -153,13 +153,13 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action home() {
-            return new ScoringSlides.Home();
+            return new Home();
         }
 
         public class Bar implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                controller.setSetPoint(Constants.SLIDE_BAR+400);
+                controller.setSetPoint(Constants.SLIDE_BAR+350);
                 double power = controller.calculate(leftSlide.getCurrentPosition());
                 boolean done = controller.atSetPoint();
 
@@ -175,7 +175,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action bar() {
-            return new ScoringSlides.Bar();
+            return new Bar();
         }
 
         public class LowBar implements Action {
@@ -197,7 +197,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action lowBar() {
-            return new ScoringSlides.LowBar();
+            return new LowBar();
         }
 
         public class Basket implements Action {
@@ -212,7 +212,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action basket() {
-            return new ScoringSlides.Basket();
+            return new Basket();
         }
     }
 
@@ -231,7 +231,7 @@ public class OneSpecimen extends LinearOpMode {
         }
 
         public Action Intake() {
-            return new IntakeSlider.intake();
+            return new intake();
         }
 
         public class Home implements Action {
@@ -242,7 +242,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action home() {
-            return new IntakeSlider.Home();
+            return new Home();
         }
 
 
@@ -255,7 +255,7 @@ public class OneSpecimen extends LinearOpMode {
         }
 
         public Action Transfer() {
-            return new IntakeSlider.TRANSFER();
+            return new TRANSFER();
         }
 
     }
@@ -274,7 +274,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action open() {
-            return new IntakeClaw.Open();
+            return new Open();
         }
 
         public class Close implements Action {
@@ -285,7 +285,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action close() {
-            return new IntakeClaw.Close();
+            return new Close();
         }
     }
 
@@ -307,7 +307,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action home() {
-            return new IntakeArm.Home();
+            return new Home();
         }
 
         public class Grab implements Action {
@@ -319,7 +319,7 @@ public class OneSpecimen extends LinearOpMode {
             }
         }
         public Action grab() {
-            return new IntakeArm.Grab();
+            return new Grab();
         }
 
         public class Transfer implements Action {
@@ -333,7 +333,7 @@ public class OneSpecimen extends LinearOpMode {
         }
 
         public Action transfer() {
-            return new IntakeArm.Transfer();
+            return new Transfer();
         }
     }
 
@@ -385,7 +385,7 @@ public class OneSpecimen extends LinearOpMode {
         /* X+ is to the right
          *  Y+ is away from you
          *  0 Heading is towards back of field */
-        Pose2d startpose = new Pose2d(-33, -63.5, Math.toRadians(-90));
+        Pose2d startpose = new Pose2d(-33, -63.5, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startpose);
         ScoringArm scoringArm = new ScoringArm(hardwareMap);
         ScoringClaw scoringClaw = new ScoringClaw(hardwareMap);
@@ -397,16 +397,15 @@ public class OneSpecimen extends LinearOpMode {
 
 
 
-        TrajectoryActionBuilder drive_to_bar = drive.actionBuilder(startpose)
-                .strafeTo(new Vector2d(-10, -38))
-                .waitSeconds(0.2);
+        TrajectoryActionBuilder score = drive.actionBuilder(startpose)
+                .strafeTo(new Vector2d(-55, -55))
+                .waitSeconds(0.1)
+                .turnTo(Math.toRadians(45))
+                .waitSeconds(1);
 
-        TrajectoryActionBuilder park = drive_to_bar.endTrajectory().fresh()
-               // .strafeTo(new Vector2d(-55, -63))
-                .strafeTo(new Vector2d(-12,-40));
 
-        TrajectoryActionBuilder first_block = park.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-50, -46))
+        TrajectoryActionBuilder first_block = score.endTrajectory().fresh()
+                .strafeTo(new Vector2d(-48, -46))
                 .turnTo(Math.toRadians(90))
                 .waitSeconds(0.2);
 
@@ -418,7 +417,7 @@ public class OneSpecimen extends LinearOpMode {
                 .waitSeconds(0.1);
 
         TrajectoryActionBuilder second_block = score1.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-60, -46))
+                .strafeTo(new Vector2d(-59, -46))
                 .turnTo(Math.toRadians(90))
                 .waitSeconds(0.2);
 
@@ -459,16 +458,17 @@ public class OneSpecimen extends LinearOpMode {
         waitForStart();
         if (isStopRequested())return;
         Actions.runBlocking(new ParallelAction(
-              drive_to_bar.build(),
-              scoringslides.lowBar(),
-            scoringArm.bar_score()));
+                score.build(),
+                scoringArm.basket(),
+                scoringslides.basket()
+        ));
 
         Actions.runBlocking(new SequentialAction(
-               scoringslides.bar(),
-              new SleepAction(0.25),
                 scoringClaw.open(),
-                scoringslides.home(),
-                park.build()
+                new SleepAction(0.1),
+                scoringClaw.close(),
+                scoringArm.home(),
+                scoringslides.home()
         ));
 
         Actions.runBlocking(new SequentialAction(

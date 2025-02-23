@@ -10,7 +10,7 @@ public class Constants {
 
     public static final double SCORING_OPEN = 0.25;
 
-    public static final double SCORING_CLOSE = 0;
+    public static final double SCORING_CLOSE = 0.01; //changed from 0...somehow 0 sets it to fight and draw too much current.
 
     public static final double ORIENTATION_HOME = 0.5;
 
@@ -34,15 +34,15 @@ public class Constants {
 
     public static final double SLIDER_INTAKE = 0.73;
 
-    public static final double SLIDER_TRANSFER = 0.94;
+    public static final double SLIDER_TRANSFER = 0.915;
 
-    public static final double INTAKE_CLAW_ROTATION_TRANSFER = 0.72;
+    public static final double INTAKE_CLAW_ROTATION_TRANSFER = 0.69;
 
     public static final int SLIDE_HOME = 0;
 
     public static final int SLIDE_BASKET = 2770;
 
-    public static final int SLIDE_BAR = 1410;
+    public static final int SLIDE_BAR = 1300;
 
     public static final int SLIDE_BAR_DOWN = 940;
 

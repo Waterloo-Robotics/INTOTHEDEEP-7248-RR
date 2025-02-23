@@ -137,6 +137,7 @@ public class SeaOfElectrons extends OpMode{
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
         odo.recalibrateIMU();
+        odo.resetPosAndIMU();
 //
         rightSlide = (DcMotorEx) hardwareMap.get(DcMotor.class, "R_slide");
         rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -359,11 +360,13 @@ public class SeaOfElectrons extends OpMode{
 
         if (gamepad1.options) {
             imu.resetYaw();
+            odo.update();
             odo.resetPosAndIMU();
         }
 
-//        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        double botHeading = odo.getHeading();  //=0
+//
+        double botHeading = odo.getHeading();  //=0 ODO IMU
+//        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS); //REV IMU
 
         // Rotate the movement direction counter to the bot's rotation
         double rotX = strafe * Math.cos(-botHeading) - forward * Math.sin(-botHeading);
@@ -380,16 +383,17 @@ public class SeaOfElectrons extends OpMode{
         double frontRightPower = (rotY - rotX - rotation) / denominator;
         double backRightPower = (rotY + rotX - rotation) / denominator;
 
-//        leftFrontDrive.setPower(frontLeftPower);
-//        leftBackDrive.setPower(backLeftPower);
-//        rightFrontDrive.setPower(frontRightPower);
-//        rightBackDrive.setPower(backRightPower);
-        leftFrontDrive.setPower(forward + strafe + rotation);
-        leftBackDrive.setPower(forward - strafe + rotation);
-        rightFrontDrive.setPower(forward - strafe - rotation);
-        rightBackDrive.setPower(forward + strafe - rotation);
+        leftFrontDrive.setPower(frontLeftPower);
+        leftBackDrive.setPower(backLeftPower);
+        rightFrontDrive.setPower(frontRightPower);
+        rightBackDrive.setPower(backRightPower);
+//        leftFrontDrive.setPower(forward + strafe + rotation);
+//        leftBackDrive.setPower(forward - strafe + rotation);
+//        rightFrontDrive.setPower(forward - strafe - rotation);
+//        rightBackDrive.setPower(forward + strafe - rotation);
 
         telemetry.addData(">", "Robot Ready.  Press START.");
+        telemetry.addData("scoring Claw Position",scoring_claw.getPosition());
         telemetry.addData("left slide position", leftSlide.getCurrentPosition());
         telemetry.addData("right slide position", rightSlide.getCurrentPosition());
         telemetry.addData("left slide power", leftSlide.getPower());
@@ -397,6 +401,7 @@ public class SeaOfElectrons extends OpMode{
         telemetry.addData("left slide current", leftSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("right slide current", rightSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Heading", odo.getHeading());
+        telemetry.addData("IMU",imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
         telemetry.update();
 
     }
@@ -428,8 +433,8 @@ public class SeaOfElectrons extends OpMode{
         switch (scoringState) {
 
             case HOME:
-                leftSlide.setTargetPosition(Constants.SLIDE_HOME);
-                rightSlide.setTargetPosition(Constants.SLIDE_HOME);
+                leftSlide.setTargetPosition(Constants.SLIDE_HOME-50);
+                rightSlide.setTargetPosition(Constants.SLIDE_HOME-50);
                 scoring_arm_left.setPosition(Constants.SCORING_ARM_HOME);
                 scoring_arm_right.setPosition(1 - Constants. SCORING_ARM_HOME);
                 break;
@@ -460,7 +465,7 @@ public class SeaOfElectrons extends OpMode{
                 rightSlide.setTargetPosition(Constants.SLIDE_BAR);
                 scoring_arm_left.setPosition(Constants.SCORING_ARM_PICKUP);
                 scoring_arm_right.setPosition(1 - Constants.SCORING_ARM_PICKUP);
-                if (leftSlide.getCurrentPosition() > 1370) {
+                if (leftSlide.getCurrentPosition() > 1300) {
                     scoringState = ScoringState.SPECIMEN_MANUAL;
                 }
                 break;
@@ -516,10 +521,11 @@ public class SeaOfElectrons extends OpMode{
                 break;
 
             case INTAKE_MANUAL:
-                intake_claw_orientation_position -= gamepad1.right_trigger*0.01;
-                intake_claw_orientation_position += gamepad1.left_trigger*0.01;
-                intake_claw_orientation_position -= gamepad2.right_trigger*0.01;
-                intake_claw_orientation_position += gamepad2.left_trigger*0.01;
+                // changes the orientation speed 
+                intake_claw_orientation_position -= gamepad1.right_trigger*0.05;
+                intake_claw_orientation_position += gamepad1.left_trigger*0.05;
+                intake_claw_orientation_position -= gamepad2.right_trigger*0.05;
+                intake_claw_orientation_position += gamepad2.left_trigger*0.05;
                 intake_claw_orientation.setPosition(intake_claw_orientation_position);
                 break;
 
