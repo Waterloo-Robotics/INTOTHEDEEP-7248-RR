@@ -18,7 +18,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Autonomous(name="Four yellow")
 public class FourYellow extends LinearOpMode {
@@ -115,6 +119,7 @@ public class FourYellow extends LinearOpMode {
     public class ScoringSlides{
         private DcMotorEx rightSlide;
         private DcMotorEx leftSlide;
+        private IMU imu;
 
         private PController controller;
 
@@ -133,6 +138,8 @@ public class FourYellow extends LinearOpMode {
             controller=new PController(.003);
             controller.setTolerance(35);
 
+            imu = hardwareMap.get(IMU.class, "imu");
+
         }
 
         public class Home implements Action {
@@ -148,6 +155,10 @@ public class FourYellow extends LinearOpMode {
 
                 leftSlide.setPower(power);
                 rightSlide.setPower(power);
+
+                packet.put("Left Slide", leftSlide.getCurrent(CurrentUnit.AMPS));
+                packet.put("Right Slide", rightSlide.getCurrent(CurrentUnit.AMPS));
+                packet.put("IMU", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
 
                 return !controller.atSetPoint();
             }
@@ -171,6 +182,10 @@ public class FourYellow extends LinearOpMode {
                 leftSlide.setPower(power);
                 rightSlide.setPower(power);
 
+                packet.put("Left Slide", leftSlide.getCurrent(CurrentUnit.AMPS));
+                packet.put("Right Slide", rightSlide.getCurrent(CurrentUnit.AMPS));
+                packet.put("IMU", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+
                 return !controller.atSetPoint();
             }
         }
@@ -193,6 +208,10 @@ public class FourYellow extends LinearOpMode {
                 leftSlide.setPower(power);
                 rightSlide.setPower(power);
 
+                packet.put("Left Slide", leftSlide.getCurrent(CurrentUnit.AMPS));
+                packet.put("Right Slide", rightSlide.getCurrent(CurrentUnit.AMPS));
+                packet.put("IMU", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+
                 return !controller.atSetPoint();
             }
         }
@@ -207,6 +226,10 @@ public class FourYellow extends LinearOpMode {
                 double power = controller.calculate(leftSlide.getCurrentPosition());
                 leftSlide.setPower(power);
                 rightSlide.setPower(power);
+
+                packet.put("Left Slide", leftSlide.getCurrent(CurrentUnit.AMPS));
+                packet.put("Right Slide", rightSlide.getCurrent(CurrentUnit.AMPS));
+                packet.put("IMU", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
 
                 return !controller.atSetPoint();
             }
@@ -394,6 +417,8 @@ public class FourYellow extends LinearOpMode {
         IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
         IntakeArm intakeArm = new IntakeArm(hardwareMap);
         IntakeClawRotation intakeClawRotation = new IntakeClawRotation(hardwareMap);
+
+
 
 
 

@@ -402,6 +402,8 @@ public class SeaOfElectrons extends OpMode{
         telemetry.addData("right slide current", rightSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Heading", odo.getHeading());
         telemetry.addData("IMU",imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+        telemetry.addData("port 0 odo", leftBackDrive.getCurrentPosition());
+        telemetry.addData("port 3 odo", rightFrontDrive.getCurrentPosition());
         telemetry.update();
 
     }

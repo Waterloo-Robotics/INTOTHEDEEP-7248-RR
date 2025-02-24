@@ -10,7 +10,7 @@ public class Constants {
 
     public static final double SCORING_OPEN = 0.25;
 
-    public static final double SCORING_CLOSE = 0.01; //changed from 0...somehow 0 sets it to fight and draw too much current.
+    public static final double SCORING_CLOSE = 0.03; //changed from 0...somehow 0 sets it to fight and draw too much current.
 
     public static final double ORIENTATION_HOME = 0.5;
 
