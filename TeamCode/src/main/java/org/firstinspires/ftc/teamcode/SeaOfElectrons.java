@@ -89,10 +89,10 @@ public class SeaOfElectrons extends OpMode{
     ScoringState  scoringState = ScoringState.HOME;
     ClawState scoringClawState = ClawState.CLOSED;
 
-    public DcMotor  leftFrontDrive   = null;
-    public DcMotor  rightFrontDrive  = null;
-    public DcMotor  leftBackDrive  = null;
-    public DcMotor  rightBackDrive  = null;
+    public DcMotorEx  leftFrontDrive   = null;
+    public DcMotorEx  rightFrontDrive  = null;
+    public DcMotorEx  leftBackDrive  = null;
+    public DcMotorEx  rightBackDrive  = null;
     public DcMotorEx rightSlide  = null;
     public DcMotorEx leftSlide  = null;
 
@@ -122,10 +122,10 @@ public class SeaOfElectrons extends OpMode{
     @Override
     public void init() {
 //        // Define and Initialize Motors
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "LD");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "RD");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "bldr");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "brdr");
+        leftFrontDrive  = hardwareMap.get(DcMotorEx.class, "LD");
+        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "RD");
+        leftBackDrive = hardwareMap.get(DcMotorEx.class, "bldr");
+        rightBackDrive = hardwareMap.get(DcMotorEx.class, "brdr");
 
         imu = hardwareMap.get(IMU.class, "imu");
         // Adjust the orientation parameters to match your robot
@@ -394,12 +394,20 @@ public class SeaOfElectrons extends OpMode{
 
         telemetry.addData(">", "Robot Ready.  Press START.");
         telemetry.addData("scoring Claw Position",scoring_claw.getPosition());
+
+
         telemetry.addData("left slide position", leftSlide.getCurrentPosition());
         telemetry.addData("right slide position", rightSlide.getCurrentPosition());
+
+
         telemetry.addData("left slide power", leftSlide.getPower());
         telemetry.addData("right slide power", rightSlide.getPower());
         telemetry.addData("left slide current", leftSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("right slide current", rightSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("leftBackDrive current", leftBackDrive.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("rightFrontDrive current", rightFrontDrive.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("rightBackDrive current", rightBackDrive.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("leftFrontDrive current", leftFrontDrive.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Heading", odo.getHeading());
         telemetry.addData("IMU",imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
         telemetry.addData("port 0 odo", leftBackDrive.getCurrentPosition());
@@ -407,7 +415,10 @@ public class SeaOfElectrons extends OpMode{
         telemetry.update();
 
     }
+    public void home_slides(){
 
+
+    }
     public void updateScoring() {
 
         if (scoringClawState == ClawState.OPEN) {
@@ -416,7 +427,7 @@ public class SeaOfElectrons extends OpMode{
             scoring_claw.setPosition(Constants.SCORING_CLOSE);
         }
 
-        if (rightSlide.getCurrent(CurrentUnit.AMPS) > 4.0 && scoringState == ScoringState.HOME && rightSlide.getCurrentPosition() < 100) {
+        if (rightSlide.getCurrent(CurrentUnit.AMPS) > 4.0 && scoringState == ScoringState.HOME && rightSlide.getCurrentPosition() < 200) {
 
             rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -424,7 +435,7 @@ public class SeaOfElectrons extends OpMode{
 
         }
 
-        if (leftSlide.getCurrent(CurrentUnit.AMPS) > 4.0 && scoringState == ScoringState.HOME && leftSlide.getCurrentPosition() < 100) {
+        if (leftSlide.getCurrent(CurrentUnit.AMPS) > 4.0 && scoringState == ScoringState.HOME && leftSlide.getCurrentPosition() < 200) {
 
             leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);

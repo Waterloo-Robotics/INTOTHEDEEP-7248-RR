@@ -24,6 +24,26 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
+public DcMotorEx  leftFrontDrive   = null;
+public DcMotorEx  rightFrontDrive  = null;
+public DcMotorEx  leftBackDrive  = null;
+public DcMotorEx  rightBackDrive  = null;
+public DcMotorEx rightSlide  = null;
+public DcMotorEx leftSlide  = null;
+
+IMU imu = null;
+GoBildaPinpointDriver odo = null;
+
+public Servo intake_claw = null;
+public Servo intake_claw_orientation = null;
+public Servo intake_claw_rotation = null;
+public Servo intake_arm_rotation_right = null;
+public Servo intake_arm_rotation_left = null;
+public Servo intake_slider = null;
+public Servo scoring_arm_right = null;
+public Servo scoring_arm_left = null;
+public Servo scoring_claw = null;
+
 @Autonomous(name="Four yellow")
 public class FourYellow extends LinearOpMode {
 
@@ -404,6 +424,32 @@ public class FourYellow extends LinearOpMode {
     }
 
     @Override
+
+    public void loop(){
+
+
+        telemetry.addData(">", "Robot Ready.  Press START.");
+        telemetry.addData("scoring Claw Position",scoring_claw.getPosition());
+
+
+        telemetry.addData("left slide position", leftSlide.getCurrentPosition());
+        telemetry.addData("right slide position", rightSlide.getCurrentPosition());
+
+
+        telemetry.addData("left slide power", leftSlide.getPower());
+        telemetry.addData("right slide power", rightSlide.getPower());
+        telemetry.addData("left slide current", leftSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("right slide current", rightSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("leftBackDrive current", leftBackDrive.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("rightFrontDrive current", rightFrontDrive.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("rightBackDrive current", rightBackDrive.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("leftFrontDrive current", leftFrontDrive.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Heading", odo.getHeading());
+        telemetry.addData("IMU",imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+        telemetry.addData("port 0 odo", leftBackDrive.getCurrentPosition());
+        telemetry.addData("port 3 odo", rightFrontDrive.getCurrentPosition());
+
+    }
     public void runOpMode(){
         /* X+ is to the right
          *  Y+ is away from you
@@ -417,6 +463,9 @@ public class FourYellow extends LinearOpMode {
         IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
         IntakeArm intakeArm = new IntakeArm(hardwareMap);
         IntakeClawRotation intakeClawRotation = new IntakeClawRotation(hardwareMap);
+
+
+
 
 
 
