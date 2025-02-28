@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode;
+
+
 
 import androidx.annotation.NonNull;
 
@@ -23,11 +24,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 
-
-@Autonomous(name="Four yellow")
-public class FourYellow extends LinearOpMode {
+@Autonomous(name="KaydenYellowAutoExprement")
+public class KaydenYellowAutoExprement extends LinearOpMode {
 
     public class ScoringClaw{
         private Servo claw;
@@ -407,7 +409,7 @@ public class FourYellow extends LinearOpMode {
 
     @Override
 
-    public void runOpMode(){
+    public void runOpMode() {
         /* X+ is to the right
          *  Y+ is away from you
          *  0 Heading is towards back of field */
@@ -422,18 +424,11 @@ public class FourYellow extends LinearOpMode {
         IntakeClawRotation intakeClawRotation = new IntakeClawRotation(hardwareMap);
 
 
-
-
-
-
-
-
         TrajectoryActionBuilder score = drive.actionBuilder(startpose)
                 .strafeTo(new Vector2d(-55, -55))
                 .waitSeconds(0.1)
                 .turnTo(Math.toRadians(45))
-                .waitSeconds(0.1);
-
+                .waitSeconds(1);
 
         TrajectoryActionBuilder first_block = score.endTrajectory().fresh()
                 .strafeTo(new Vector2d(-48, -46))
@@ -447,35 +442,6 @@ public class FourYellow extends LinearOpMode {
                 .turnTo(Math.toRadians(45))
                 .waitSeconds(0.1);
 
-        TrajectoryActionBuilder second_block = score1.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-59, -46))
-                .turnTo(Math.toRadians(90))
-                .waitSeconds(0.2);
-
-        TrajectoryActionBuilder score2 = second_block.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-55, -55))
-                .waitSeconds(0.1)
-                .turnTo(Math.toRadians(45))
-                .waitSeconds(0.1);
-
-        TrajectoryActionBuilder park2 = score2.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-33, -63.5))
-                .waitSeconds(0.1)
-                .turnTo(Math.toRadians(-90))
-                .waitSeconds(0.1);
-
-        TrajectoryActionBuilder score3 = park2.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-60, -12));
-
-
-//        TrajectoryActionBuilder adjscore3 = score3.endTrajectory().fresh()
-//                .strafeTo(new Vector2d(-63.5, -63.5));
-
-
-        TrajectoryActionBuilder netscore3 = score3.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-63.5, -51.5));
-
-
 
         Actions.runBlocking(new ParallelAction(
                 scoringClaw.close(),
@@ -485,7 +451,6 @@ public class FourYellow extends LinearOpMode {
                 intakeArm.home(),
                 intakeClawRotation.home()
         ));
-
         waitForStart();
         if (isStopRequested())return;
         Actions.runBlocking(new ParallelAction(
@@ -538,75 +503,8 @@ public class FourYellow extends LinearOpMode {
                 scoringslides.basket()
         ));
 
-        Actions.runBlocking(new SequentialAction(
-                scoringClaw.open(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                scoringArm.home(),
-                new SleepAction(0.75),
-                scoringslides.home()
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                second_block.build(),
-                intakeArm.grab(),
-                intakeClawRotation.Intake(),
-                intakeSlider.Intake(),
-                intakeClaw.open(),
-                scoringClaw.close(),
-                scoringArm.Transfer(),
-                new SleepAction(0.5),
-                scoringClaw.open(),
-                new SleepAction(0.25),
-                intakeClaw.close(),
-                new SleepAction(0.25)
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                intakeClawRotation.Transfer(),
-                intakeArm.transfer(),
-                new SleepAction(0.75)
-
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                intakeSlider.Transfer(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                new SleepAction(0.5),
-                intakeClaw.open()
-        ));
-
-        Actions.runBlocking(new ParallelAction(
-                score2.build(),
-                scoringArm.basket(),
-                scoringslides.basket()
-        ));
-
-
-        Actions.runBlocking(new SequentialAction(
-                scoringClaw.open(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                scoringArm.home(),
-                new SleepAction(0.25),
-                scoringClaw.close(),
-                scoringArm.home(),
-                intakeSlider.home(),
-                intakeClaw.close(),
-                intakeArm.home(),
-                intakeClawRotation.home(),
-                scoringslides.home()
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                score3.build(),
-                new SleepAction(0.1),
-                //adjscore3.build(),
-                new SleepAction(0.1),
-                netscore3.build()
-        ));
 
 
     }
+
 }

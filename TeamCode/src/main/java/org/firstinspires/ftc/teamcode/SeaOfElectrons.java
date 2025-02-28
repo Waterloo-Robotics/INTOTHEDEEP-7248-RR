@@ -408,7 +408,11 @@ public class SeaOfElectrons extends OpMode{
         telemetry.addData("rightFrontDrive current", rightFrontDrive.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("rightBackDrive current", rightBackDrive.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("leftFrontDrive current", leftFrontDrive.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("Heading", odo.getHeading());
+//        telemetry.addData("left scoring arm current", scoring_arm_left.getCurrent(CurrentUnit.AMPS));
+//        telemetry.addData("right scoring arm current", scoring_arm_right.getCurrent(CurrentUnit.AMPS));
+//        telemetry.addData("left scoring arm power", scoring_arm_left.getPower(CurrentUnit.AMPS));
+//        telemetry.addData("right scoring arm power", scoring_arm_right.getCurrent(CurrentUnit.AMPS));
+//        telemetry.addData("Heading", odo.getHeading());
         telemetry.addData("IMU",imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
         telemetry.addData("port 0 odo", leftBackDrive.getCurrentPosition());
         telemetry.addData("port 3 odo", rightFrontDrive.getCurrentPosition());

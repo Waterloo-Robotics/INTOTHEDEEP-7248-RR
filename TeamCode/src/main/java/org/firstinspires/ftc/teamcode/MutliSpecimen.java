@@ -398,7 +398,7 @@ public class MutliSpecimen extends LinearOpMode {
 
 
         TrajectoryActionBuilder drive_to_bar = drive.actionBuilder(startpose)
-                .strafeTo(new Vector2d(12, -38))
+                .strafeTo(new Vector2d(10, -36))
                 .waitSeconds(0.2);
 
         TrajectoryActionBuilder pick_up2 = drive_to_bar.endTrajectory().fresh()
@@ -411,23 +411,28 @@ public class MutliSpecimen extends LinearOpMode {
         .strafeTo(new Vector2d(6, -36));
 
 
-
-
-                TrajectoryActionBuilder park = score2.endTrajectory().fresh()
+        TrajectoryActionBuilder park = score2.endTrajectory().fresh()
                 // .strafeTo(new Vector2d(-55, -63))
-                .strafeTo(new Vector2d(12,-40));
+                .strafeTo(new Vector2d(30,-35));
 
         TrajectoryActionBuilder park2 = park.endTrajectory().fresh()
-                .strafeTo(new Vector2d(36,-40));
+                .strafeTo(new Vector2d(39,-40));
+
+//        TrajectoryActionBuilder park3 = park2.endTrajectory().fresh()
+//                .strafeTo(new Vector2d(39,-40));
 
         TrajectoryActionBuilder block1 = park2.endTrajectory().fresh()
                 .strafeTo(new Vector2d(41,-12));
 
+
         TrajectoryActionBuilder human1 = block1.endTrajectory().fresh()
                 .strafeTo(new Vector2d(41,-55));
+
+        TrajectoryActionBuilder preblock2 = human1.endTrajectory().fresh()
+                .strafeToLinearHeading(new Vector2d(48, -12), Math.toRadians(90));
 //
-        TrajectoryActionBuilder block2 = human1.endTrajectory().fresh()
-         .strafeToLinearHeading(new Vector2d(53, -12), Math.toRadians(90));
+        TrajectoryActionBuilder block2 = preblock2.endTrajectory().fresh()
+         .strafeToLinearHeading(new Vector2d(54, -12), Math.toRadians(90));
               //  .strafeTo(new Vector2d(53,-12));
 
         TrajectoryActionBuilder human2 = block2.endTrajectory().fresh()
@@ -453,19 +458,21 @@ public class MutliSpecimen extends LinearOpMode {
         if (isStopRequested())return;
         Actions.runBlocking(new ParallelAction(
                 drive_to_bar.build(),
-                scoringslides.lowBar(),
+                scoringslides.bar(),
                 scoringArm.bar_score()));
 
         Actions.runBlocking(new SequentialAction(
-                scoringslides.bar(),
+                scoringslides.lowBar(),
                 new SleepAction(0.25),
                 scoringClaw.open(),
+                new SleepAction(0.1),
                 scoringslides.home()
                 //park.build()
         ));
 
         Actions.runBlocking(new ParallelAction(
                 pick_up2.build(),
+                new SleepAction(0.1),
                 scoringClaw.open(),
         new SleepAction(0.25)
 
@@ -495,15 +502,21 @@ public class MutliSpecimen extends LinearOpMode {
 
 
         Actions.runBlocking(new SequentialAction(
+                park.build(),
+                new SleepAction(0.1),
                 park2.build(),
-                new SleepAction(0.25),
+                new SleepAction(0.1),
+//                park3.build(),
+//                new SleepAction(0.1),
                 block1.build(),
-                new SleepAction(0.25),
-                human1.build()
-                //                new SleepAction(0.25),
-//                block2.build(),
-//                new SleepAction(0.25),
-//                human2.build(),
+                new SleepAction(0.1),
+                human1.build(),
+                new  SleepAction(0.1),
+                preblock2.build(),
+                new SleepAction(0.1),
+                block2.build(),
+                new SleepAction(0.1),
+                human2.build()
 //                new SleepAction(0.25),
 //                block3.build(),
 //                new SleepAction(0.25),

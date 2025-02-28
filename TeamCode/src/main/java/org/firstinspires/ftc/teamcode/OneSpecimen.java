@@ -398,7 +398,7 @@ public class OneSpecimen extends LinearOpMode {
 
 
         TrajectoryActionBuilder drive_to_bar = drive.actionBuilder(startpose)
-                .strafeTo(new Vector2d(-10, -38))
+                .strafeTo(new Vector2d(-12, -38.5))
                 .waitSeconds(0.2);
 
         TrajectoryActionBuilder park = drive_to_bar.endTrajectory().fresh()
@@ -406,7 +406,7 @@ public class OneSpecimen extends LinearOpMode {
                 .strafeTo(new Vector2d(-12,-40));
 
         TrajectoryActionBuilder first_block = park.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-50, -46))
+                .strafeTo(new Vector2d(-50, -47))
                 .turnTo(Math.toRadians(90))
                 .waitSeconds(0.2);
 
@@ -418,7 +418,7 @@ public class OneSpecimen extends LinearOpMode {
                 .waitSeconds(0.1);
 
         TrajectoryActionBuilder second_block = score1.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-60, -46))
+                .strafeTo(new Vector2d(-60, -47))
                 .turnTo(Math.toRadians(90))
                 .waitSeconds(0.2);
 
@@ -435,7 +435,7 @@ public class OneSpecimen extends LinearOpMode {
                 .waitSeconds(0.1);
 
         TrajectoryActionBuilder score3 = park2.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-60, -12));
+                .strafeTo(new Vector2d(-63, -12));
 
 
 //        TrajectoryActionBuilder adjscore3 = score3.endTrajectory().fresh()
@@ -443,7 +443,7 @@ public class OneSpecimen extends LinearOpMode {
 
 
         TrajectoryActionBuilder netscore3 = score3.endTrajectory().fresh()
-                .strafeTo(new Vector2d(-63.5, -63.5));
+                .strafeTo(new Vector2d(-63.5, -51.5));
 
 
 
@@ -460,11 +460,11 @@ public class OneSpecimen extends LinearOpMode {
         if (isStopRequested())return;
         Actions.runBlocking(new ParallelAction(
               drive_to_bar.build(),
-              scoringslides.lowBar(),
+              scoringslides.bar(),
             scoringArm.bar_score()));
 
         Actions.runBlocking(new SequentialAction(
-               scoringslides.bar(),
+               scoringslides.lowBar(),
               new SleepAction(0.25),
                 scoringClaw.open(),
                 scoringslides.home(),
